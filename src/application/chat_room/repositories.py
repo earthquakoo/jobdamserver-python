@@ -5,11 +5,14 @@ from src.domain.chat_room.models import (
     RoomMember,
     Message
 )
-from src.exceptions.chat_room_exceptions import PersonnelOvercountError
+from src.exceptions.chat_room_exceptions import (
+    PersonnelOvercountError,
+    DuplicateRoomNameError
+)
 from src.exceptions.user_exceptions import MaximumOwnedRoomsExceed
 from src.domain.user.models import User
 from src.domain.chat_room.entities import (
-    ChatRoomEntity,
+    ChatRoomEntity
 )
 
 
@@ -18,6 +21,10 @@ class ChatRoomRepository:
         self.session = session
     
     def create_room(self, chat_room_entity: ChatRoomEntity) -> ChatRoomEntity:
+        existing_room = self.session.query(ChatRoom).filter(ChatRoom.room_name==chat_room_entity.room_name).first()
+        if existing_room:
+            raise DuplicateRoomNameError(room_name=chat_room_entity.room_name)
+        
         new_chat_room_entity = ChatRoom(
             room_name=chat_room_entity.room_name,
             tag=chat_room_entity.tag,

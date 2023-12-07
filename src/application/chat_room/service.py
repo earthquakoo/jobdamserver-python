@@ -1,7 +1,9 @@
 from src.application.chat_room.repositories import ChatRoomRepository
 from src.exceptions.chat_room_exceptions import (
-    DuplicateRoomNameError
+    DuplicateRoomNameError,
+    PersonnelOvercountError
 )
+from src.exceptions.user_exceptions import MaximumOwnedRoomsExceed
 from src.domain.chat_room.entities import (
     ChatRoomEntity
 )
@@ -21,16 +23,19 @@ class ChatRoomService:
             maximum_people=maximum_people,
             user_id=user_id
             )
+        try:
+            new_chat_room_entity = self.chat_room_repository.create_room(chat_room_entity=chat_room_entity)
+            
+            self.chat_room_repository.join_room(
+                user_id=user_id,
+                room_name=room_name
+            )
+    
+        except DuplicateRoomNameError:
+            raise DuplicateRoomNameError()
         
-        new_chat_room_entity = self.chat_room_repository.create_room(chat_room_entity=chat_room_entity)
-        
-        self.chat_room_repository.join_room(
-            user_id=user_id,
-            room_name=room_name
-        )
-        
-        if new_chat_room_entity is None:
-            raise DuplicateRoomNameError(room_name=room_name)
+        except MaximumOwnedRoomsExceed:
+            raise MaximumOwnedRoomsExceed()
 
         return new_chat_room_entity
     
@@ -109,9 +114,12 @@ class ChatRoomService:
         tag: str | None,
         maximum_people: int | None
         ) -> None:
-        self.chat_room_repository.change_room_setting(
-            cur_room_name=cur_room_name,
-            room_name=room_name,
-            tag=tag,
-            maximum_people=maximum_people
-        )
+        try:
+            self.chat_room_repository.change_room_setting(
+                cur_room_name=cur_room_name,
+                room_name=room_name,
+                tag=tag,
+                maximum_people=maximum_people
+            )
+        except PersonnelOvercountError:
+            raise PersonnelOvercountError()
