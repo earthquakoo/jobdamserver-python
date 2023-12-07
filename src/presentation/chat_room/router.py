@@ -156,10 +156,10 @@ async def change_room_setting(
     chat_room_service: ChatRoomService = Depends(get_chat_room_service),
     current_user_id: str = Depends(get_current_user_id)
     ):
-    print(request.cur_room_name, request.room_name, request.tag, request.maximum_people)
-    chat_room_service.change_room_setting(
+    change_room = chat_room_service.change_room_setting(
         cur_room_name=request.cur_room_name,
         room_name=request.room_name,
         tag=request.tag,
         maximum_people=request.maximum_people
     )
+    return change_room
