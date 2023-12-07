@@ -121,5 +121,8 @@ class ChatRoomService:
                 tag=tag,
                 maximum_people=maximum_people
             )
+        except DuplicateRoomNameError:
+            raise DuplicateRoomNameError(room_name=room_name)
+            
         except PersonnelOvercountError:
             raise PersonnelOvercountError()

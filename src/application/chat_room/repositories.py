@@ -177,9 +177,12 @@ class ChatRoomRepository:
         chat_room_obj = self.session.query(ChatRoom).filter(ChatRoom.room_name==cur_room_name).first()
         
         if room_name:
-           chat_room_obj.room_name = room_name
-           room_member_obj = self.session.query(RoomMember).filter(RoomMember.room_name==cur_room_name).first()
-           room_member_obj.room_name = room_name
+            new_room = self.session.query(ChatRoom).filter(ChatRoom.room_name==room_name).first()
+            if new_room:
+                raise DuplicateRoomNameError(room_name=room_name)
+            chat_room_obj.room_name = room_name
+            room_member_obj = self.session.query(RoomMember).filter(RoomMember.room_name==cur_room_name).first()
+            room_member_obj.room_name = room_name
         if tag:
             chat_room_obj.tag = tag
         if maximum_people:
