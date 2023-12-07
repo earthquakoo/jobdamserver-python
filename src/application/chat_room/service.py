@@ -32,7 +32,7 @@ class ChatRoomService:
             )
     
         except DuplicateRoomNameError:
-            raise DuplicateRoomNameError()
+            raise DuplicateRoomNameError(room_name=room_name)
         
         except MaximumOwnedRoomsExceed:
             raise MaximumOwnedRoomsExceed()
