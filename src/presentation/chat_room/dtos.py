@@ -33,5 +33,5 @@ class LeaveRoomRequest(BaseModel):
 class ChangeRoomSetting(BaseModel):
     cur_room_name: str
     room_name: str | None = None
-    maximum_people: int | None = None
+    maximum_people: str | None = None
     tag: str | None = None

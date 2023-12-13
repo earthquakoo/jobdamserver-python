@@ -189,7 +189,7 @@ class ChatRoomRepository:
         if tag:
             chat_room_obj.tag = tag
         if maximum_people:
-            if chat_room_obj.personnel > maximum_people:
+            if chat_room_obj.personnel > int(maximum_people):
                 raise PersonnelOvercountError()
             chat_room_obj.maximum_people = maximum_people
         
