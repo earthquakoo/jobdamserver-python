@@ -194,3 +194,4 @@ class ChatRoomRepository:
             chat_room_obj.maximum_people = maximum_people
         
         self.session.commit()
+        self.session.refresh(chat_room_obj)
