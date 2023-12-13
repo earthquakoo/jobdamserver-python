@@ -42,6 +42,7 @@ class ChatRoomRepository:
         
         self.session.add(new_chat_room_entity)
         self.session.commit()
+        self.session.refresh(new_chat_room_entity)
         chat_room_entity.assign_room_id(room_id=new_chat_room_entity.room_id)
         
         return chat_room_entity
@@ -57,6 +58,7 @@ class ChatRoomRepository:
         
         self.session.add(new_message_entity)
         self.session.commit()
+        self.session.refresh(new_message_entity)
         
         
     def delete_room(self, room_name: str, user_id: int):
@@ -89,6 +91,7 @@ class ChatRoomRepository:
         
         self.session.add(new_member)
         self.session.commit()
+        self.session.refresh(new_member)
     
     
     def leave_room(self, room_name: str, user_name: str | None, user_id: int | None):
